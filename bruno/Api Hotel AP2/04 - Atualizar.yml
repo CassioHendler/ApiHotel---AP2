@@ -1,0 +1,23 @@
+info:
+  name: 04 - Atualizar
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: "http://localhost:5050/api/quartos/1"
+  body:
+    type: json
+    data: |-
+      {
+        "titulo": "Quarto 301 - Suíte Luxo Reformada",
+        "disponivel": false
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

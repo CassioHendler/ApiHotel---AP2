@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+
+# Banco SQLite local (nao versionar)
+*.db
+*.db-shm
+*.db-wal

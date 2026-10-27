@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Paradiso - Gestão de Quartos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Cabeçalho Principal -->
+  <header class="header">
+    <div class="header-content">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">🏨</span>
+        <div>
+          <h1 class="brand-title">Hotel Paradiso</h1>
+          <p class="brand-subtitle">Painel de Quartos</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="container">
+    <div class="dashboard-grid">
+      
+      <!-- Seção: Lista de Quartos -->
+      <section class="card" aria-labelledby="quartos-heading">
+        <div class="card-header">
+          <div>
+            <h2 id="quartos-heading" class="card-title">Quartos do Hotel</h2>
+            <p class="card-description">Quartos lidos da API e gravados no banco SQLite</p>
+          </div>
+          <div class="stats-pills" id="stats-container" aria-label="Resumo de quartos">
+            <!-- Estatísticas populadas via JS -->
+          </div>
+        </div>
+
+        <div id="lista-quartos" class="rooms-list" role="list">
+          <p class="carregando">Carregando quartos...</p>
+        </div>
+      </section>
+
+      <!-- Seção: Formulário Visual para Ação Futura -->
+      <section class="card" aria-labelledby="form-heading">
+        <div class="card-header">
+          <div>
+            <h2 id="form-heading" class="card-title">Cadastrar novo quarto</h2>
+            <p class="card-description">
+              Envia para <code>POST /api/quartos</code>; ao editar, usa <code>PUT /api/quartos/{id}</code>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Área de Mensagens de Feedback -->
+        <div id="mensagem-feedback" class="feedback-container" aria-live="polite"></div>
+
+        <form id="form-quarto" novalidate>
+          <input type="hidden" id="quarto-id">
+          <div class="form-group">
+            <label for="titulo-quarto">
+              Identificação / Título do Quarto <span class="required" aria-hidden="true">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="titulo-quarto" 
+              name="titulo" 
+              placeholder="Ex.: Quarto 301 - Suíte Luxo" 
+              required
+              autocomplete="off"
+            >
+            <span class="field-hint">Nome identificador do quarto a ser cadastrado.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="disponibilidade-quarto">Disponibilidade</label>
+            <select id="disponibilidade-quarto" name="disponivel">
+              <option value="true">Disponível para reservas</option>
+              <option value="false">Ocupado / Em manutenção</option>
+            </select>
+            <span class="field-hint">Define se o quarto está livre para reservas.</span>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="btn-cadastrar" class="btn btn-primary">
+              <span aria-hidden="true">💾</span> <span id="btn-cadastrar-texto">Cadastrar quarto</span>
+            </button>
+            <button type="button" id="btn-cancelar" class="btn btn-secondary" hidden>
+              Cancelar edição
+            </button>
+          </div>
+        </form>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>Desenvolvimento Back-End &bull; AP2 &bull; CRUD com Entity Framework Core e SQLite</p>
+      <p class="footer-note">HTML, CSS e JavaScript puros &bull; Dados vindos da API</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

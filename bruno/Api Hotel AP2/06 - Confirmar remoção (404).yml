@@ -1,0 +1,16 @@
+info:
+  name: 06 - Confirmar remoção (404)
+  type: http
+  seq: 7
+
+http:
+  method: GET
+  url: "http://localhost:5050/api/quartos/1"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
