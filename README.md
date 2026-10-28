@@ -66,4 +66,3 @@ A Collection do Bruno está em `bruno/Api Hotel AP2` (abrir a pasta no Bruno), c
 ## Vídeo de demonstração — AP2
 
 https://drive.google.com/drive/folders/1AdOpij7Wd1Vzkid1H6994Cmda-yPKlR8?usp=sharing
-
