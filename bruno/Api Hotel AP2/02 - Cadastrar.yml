@@ -1,0 +1,47 @@
+info:
+  name: 02 - Cadastrar
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/quartos"
+  body:
+    type: json
+    data: |-
+      {
+        "titulo": "Quarto 301 - Suíte Luxo",
+        "disponivel": true
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        bru.deleteVar("quartoId");
+    - type: after-response
+      code: |-
+        const id = res.getBody()?.id;
+        if (res.getStatus() === 201 && Number.isInteger(id) && id > 0) {
+          bru.setVar("quartoId", id);
+        }
+    - type: tests
+      code: |-
+        test("Cadastrar retorna 201", () => {
+          expect(res.getStatus()).to.equal(201);
+          expect(res.getBody()).to.deep.equal({
+            id: Number(bru.getVar("quartoId")),
+            titulo: "Quarto 301 - Suíte Luxo",
+            disponivel: true
+          });
+          expect(res.getBody().id).to.be.greaterThan(0);
+          expect(res.getHeader("location")).to.equal("/api/quartos/" + res.getBody().id);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

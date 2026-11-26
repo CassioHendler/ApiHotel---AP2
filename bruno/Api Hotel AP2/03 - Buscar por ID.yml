@@ -1,0 +1,29 @@
+info:
+  name: 03 - Buscar por ID
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/quartos/{{quartoId}}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Buscar por ID retorna 200", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody()).to.deep.equal({
+            id: Number(bru.getVar("quartoId")),
+            titulo: "Quarto 301 - Suíte Luxo",
+            disponivel: true
+          });
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

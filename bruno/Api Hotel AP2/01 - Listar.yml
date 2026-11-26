@@ -5,8 +5,17 @@ info:
 
 http:
   method: GET
-  url: "http://localhost:5050/api/quartos"
+  url: "{{baseUrl}}/api/quartos"
   auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Listar retorna 200", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody()).to.be.an("array");
+        });
 
 settings:
   encodeUrl: true

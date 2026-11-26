@@ -5,7 +5,7 @@ info:
 
 http:
   method: PUT
-  url: "http://localhost:5050/api/quartos/1"
+  url: "{{baseUrl}}/api/quartos/{{quartoId}}"
   body:
     type: json
     data: |-
@@ -14,6 +14,19 @@ http:
         "disponivel": false
       }
   auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Atualizar retorna 200", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody()).to.deep.equal({
+            id: Number(bru.getVar("quartoId")),
+            titulo: "Quarto 301 - Suíte Luxo Reformada",
+            disponivel: false
+          });
+        });
 
 settings:
   encodeUrl: true

@@ -1,0 +1,46 @@
+info:
+  name: 08 - Cadastrar para persistência
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/quartos"
+  body:
+    type: json
+    data: |-
+      {
+        "titulo": "Quarto 302 - Teste de persistência",
+        "disponivel": true
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        bru.deleteVar("quartoPersistenciaId");
+    - type: after-response
+      code: |-
+        const id = res.getBody()?.id;
+        if (res.getStatus() === 201 && Number.isInteger(id) && id > 0) {
+          bru.setVar("quartoPersistenciaId", id);
+        }
+    - type: tests
+      code: |-
+        test("Cadastrar para persistência retorna 201", () => {
+          expect(res.getStatus()).to.equal(201);
+          expect(res.getBody()).to.deep.equal({
+            id: Number(bru.getVar("quartoPersistenciaId")),
+            titulo: "Quarto 302 - Teste de persistência",
+            disponivel: true
+          });
+          expect(res.getBody().id).to.be.greaterThan(0);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

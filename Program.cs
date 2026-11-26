@@ -1,3 +1,6 @@
+using ApiHotel.Data;
+using ApiHotel.Dtos;
+using ApiHotel.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,25 +61,3 @@ app.MapDelete("/api/quartos/{id:int}", async (int id, ApiDbContext db) =>
 });
 
 app.Run();
-
-// Model persistido pelo EF Core (tabela Quartos)
-class Quarto
-{
-    public int Id { get; set; }
-    public string Titulo { get; set; } = string.Empty;
-    public bool Disponivel { get; set; }
-}
-
-class ApiDbContext : DbContext
-{
-    public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options)
-    {
-    }
-
-    public DbSet<Quarto> Quartos => Set<Quarto>();
-}
-
-// DTOs de entrada (mesmo contrato da AP1; "disponivel" é opcional no POST)
-record QuartoDTO(string titulo, bool disponivel = true);
-
-record QuartoAtualizadoDTO(string titulo, bool disponivel);

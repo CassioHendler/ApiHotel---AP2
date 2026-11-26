@@ -6,3 +6,9 @@ obj/
 *.db
 *.db-shm
 *.db-wal
+*.db-journal
+
+# Configuração local e segredos
+.env
+.env.*
+appsettings.Local.json

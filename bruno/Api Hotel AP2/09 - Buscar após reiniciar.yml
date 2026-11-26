@@ -1,0 +1,32 @@
+info:
+  name: 09 - Buscar após reiniciar
+  type: http
+  seq: 10
+  tags:
+    - apos-reinicio
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/quartos/{{quartoPersistenciaId}}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Buscar após reiniciar retorna 200", () => {
+          expect(res.getStatus()).to.equal(200);
+          const id = bru.getVar("quartoPersistenciaId") ?? bru.getEnvVar("quartoPersistenciaId");
+          expect(res.getBody()).to.deep.equal({
+            id: Number(id),
+            titulo: "Quarto 302 - Teste de persistência",
+            disponivel: true
+          });
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

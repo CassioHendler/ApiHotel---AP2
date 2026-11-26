@@ -5,8 +5,17 @@ info:
 
 http:
   method: GET
-  url: "http://localhost:5050/api/status"
+  url: "{{baseUrl}}/api/status"
   auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("API no ar retorna 200", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody()).to.equal("Api do Hotel esta no ar!");
+        });
 
 settings:
   encodeUrl: true
