@@ -1,6 +1,6 @@
 # API Hotel — AS de Back-end
 
-API do Hotel Paradiso para cadastrar, consultar, atualizar e remover quartos. A aplicação usa ASP.NET Core Minimal API, Entity Framework Core e SQLite.
+API do Hotel para cadastrar, consultar, atualizar e remover quartos. A aplicação usa ASP.NET Core Minimal API, Entity Framework Core e SQLite.
 
 ## Pré-requisitos
 
