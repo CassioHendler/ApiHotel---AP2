@@ -1,12 +1,12 @@
 # API Hotel — AS de Back-end
 
-API do Hotel Paradiso para cadastrar, consultar, atualizar e remover quartos. A AS organiza o código da AP2 por responsabilidade. O projeto usa ASP.NET Core Minimal API, Entity Framework Core e SQLite.
+API do Hotel Paradiso para cadastrar, consultar, atualizar e remover quartos. A aplicação usa ASP.NET Core Minimal API, Entity Framework Core e SQLite.
 
 ## Pré-requisitos
 
 - SDK do .NET 10.
-- Ferramenta `dotnet-ef` 10.0.12, mesma versão dos pacotes EF Core do projeto.
-- Bruno 3.0 ou mais recente com suporte a Collections OpenCollection em YAML.
+- Ferramenta `dotnet-ef` 10.0.12.
+- Bruno 3.0 ou mais recente, com suporte a Collections OpenCollection em YAML.
 
 ## Estrutura do projeto
 
@@ -23,9 +23,6 @@ ApiHotel---AP2/
 ├── Data/
 │   └── ApiDbContext.cs
 ├── Migrations/
-│   ├── 20261027234114_BancoInicial.cs
-│   ├── 20261027234114_BancoInicial.Designer.cs
-│   └── ApiDbContextModelSnapshot.cs
 ├── bruno/
 │   └── Api Hotel AP2/
 │       ├── opencollection.yml
@@ -33,33 +30,29 @@ ApiHotel---AP2/
 │       │   └── Local.yml
 │       └── requisições 00 a 09 (.yml)
 ├── wwwroot/
-│   ├── index.html
-│   ├── app.js
-│   └── style.css
 ├── .gitignore
-├── GUIA_ENTREGA_AS.md
 └── README.md
 ```
 
 | Arquivo ou pasta | Responsabilidade |
 | --- | --- |
-| `Models/Quarto.cs` | Define a entidade que o EF Core persiste na tabela `Quartos`, com ID, título e disponibilidade. |
-| `Dtos/` | Define os dados de entrada. `QuartoDTO` recebe o JSON do POST e `QuartoAtualizadoDTO` recebe o JSON do PUT. |
-| `Data/ApiDbContext.cs` | Recebe a configuração do EF Core e expõe o conjunto `Quartos` como `DbSet<Quarto>`. |
-| `Program.cs` | Configura a aplicação, registra o contexto com SQLite, serve os arquivos estáticos e mapeia as rotas da Minimal API. |
-| `Migrations/` | Guarda a migração inicial e o snapshot do modelo usados pelo EF Core. |
+| `Models/Quarto.cs` | Define a entidade `Quarto`, com ID, título e disponibilidade. |
+| `Dtos/` | Define o JSON de entrada do POST (`QuartoDTO`) e do PUT (`QuartoAtualizadoDTO`). |
+| `Data/ApiDbContext.cs` | Configura o acesso aos dados pelo EF Core e expõe `Quartos` como `DbSet<Quarto>`. |
+| `Program.cs` | Inicializa a aplicação, registra o contexto com SQLite, serve os arquivos estáticos e define as rotas. |
+| `Migrations/` | Contém a migração inicial e o snapshot do modelo do EF Core. |
 
-`Program.cs` importa `ApiHotel.Models`, `ApiHotel.Dtos`, `ApiHotel.Data` e `Microsoft.EntityFrameworkCore`. O contexto usa `ApiHotel.Models` para acessar a entidade. Os metadados das migrações importam `ApiHotel.Data` para referenciar o contexto no namespace atual.
+O `Program.cs` importa `ApiHotel.Models`, `ApiHotel.Dtos`, `ApiHotel.Data` e `Microsoft.EntityFrameworkCore`. O contexto usa `ApiHotel.Models` para acessar a entidade `Quarto`.
 
 ## Executar localmente
 
-Abra um terminal na pasta que contém `ApiHotel.csproj`. Instale o `dotnet-ef` uma vez, caso ainda não o tenha.
+Abra um terminal na pasta que contém `ApiHotel.csproj`. Se ainda precisar instalar o `dotnet-ef`, rode:
 
 ```powershell
 dotnet tool install --global dotnet-ef --version 10.0.12
 ```
 
-Se já tiver outra versão, ajuste com `dotnet tool update --global dotnet-ef --version 10.0.12`.
+Se já tiver outra versão instalada, use `dotnet tool update --global dotnet-ef --version 10.0.12`.
 
 ```powershell
 dotnet restore
@@ -68,20 +61,18 @@ dotnet ef database update
 dotnet run --urls http://localhost:5050
 ```
 
-O comando `dotnet ef database update` aplica as migrações ao banco. Por padrão, a configuração em `appsettings.json` usa o arquivo local `apihotel.db`. Com a API aberta, acesse [http://localhost:5050](http://localhost:5050) para usar a interface da AP2. Ela é servida pela própria aplicação a partir de `wwwroot/` e usa `fetch` para acessar o CRUD.
+O comando `dotnet ef database update` aplica as migrações ao arquivo local `apihotel.db`, configurado em `appsettings.json`. Com a API em execução, a interface pode ser acessada em [http://localhost:5050](http://localhost:5050).
 
 ## Endpoints
 
 | Método | Rota | Sucesso | Erros esperados |
 | --- | --- | --- | --- |
-| GET | `/api/status` | `200 OK`, mensagem de status em texto | — |
-| GET | `/api/quartos` | `200 OK`, lista ordenada pelo ID | — |
-| POST | `/api/quartos` | `201 Created`, quarto com ID gerado e cabeçalho `Location` | `400 Bad Request` com título vazio |
-| GET | `/api/quartos/{id}` | `200 OK`, quarto com o ID consultado | `404 Not Found` se o ID não existir |
-| PUT | `/api/quartos/{id}` | `200 OK`, quarto atualizado | `400 Bad Request` com título vazio, `404 Not Found` com ID inexistente e título válido |
-| DELETE | `/api/quartos/{id}` | `204 No Content`, corpo vazio | `404 Not Found` se o ID não existir |
-
-Envie os corpos do POST e do PUT como `application/json`. No POST, `disponivel` vale `true` quando omitido.
+| GET | `/api/status` | `200 OK` com mensagem de status | — |
+| GET | `/api/quartos` | `200 OK` com a lista ordenada pelo ID | — |
+| POST | `/api/quartos` | `201 Created` com o quarto, o ID gerado e o cabeçalho `Location` | `400` se o título estiver vazio |
+| GET | `/api/quartos/{id}` | `200 OK` com o quarto | `404` se o ID não existir |
+| PUT | `/api/quartos/{id}` | `200 OK` com o quarto atualizado | `400` se o título estiver vazio ou `404` se o ID não existir |
+| DELETE | `/api/quartos/{id}` | `204 No Content` com corpo vazio | `404` se o ID não existir |
 
 **POST `/api/quartos`**
 
@@ -92,7 +83,7 @@ Envie os corpos do POST e do PUT como `application/json`. No POST, `disponivel` 
 }
 ```
 
-Exemplo de resposta do POST, com `Location: /api/quartos/42`. Use nas próximas requisições o ID que a API devolver na sua execução.
+O campo `disponivel` assume `true` se for omitido. O POST retorna o quarto com seu ID. Por exemplo, com `Location: /api/quartos/42`:
 
 ```json
 {
@@ -111,26 +102,18 @@ Exemplo de resposta do POST, com `Location: /api/quartos/42`. Use nas próximas 
 }
 ```
 
-O PUT e o GET de conferência retornam o mesmo `id`, com os valores atualizados de `titulo` e `disponivel`. O corpo abaixo corresponde à resposta `400` para um título em branco no POST ou no PUT.
+Use o ID retornado pela API na sua execução. Envie o corpo do POST e do PUT como `application/json`.
 
-```json
-{
-  "erro": "O título do quarto é obrigatório."
-}
-```
+## Testar com Bruno
 
-## Collection do Bruno e persistência
+Abra a pasta `bruno/Api Hotel AP2` com **Open Collection** e selecione o ambiente **Local**. Envie as requisições **00 a 08** na ordem. O POST **02** captura o ID usado nas operações seguintes. O GET **07** deve retornar `404` após a exclusão.
 
-Abra a pasta `bruno/Api Hotel AP2` pelo comando **Open Collection** no Bruno. Selecione o ambiente **Local**, que define `baseUrl` como `http://localhost:5050`. Envie as requisições **00 a 08** em ordem. O POST **02** captura o ID real em `quartoId` para a busca, a atualização, a conferência e a remoção. O GET **07** deve devolver `404` para esse mesmo ID.
+Para verificar a persistência, anote o ID devolvido pelo POST **08**. Mantenha o Bruno aberto, pare a API com `Ctrl+C` e execute `dotnet run --urls http://localhost:5050` novamente na mesma pasta. Envie o GET **09**. A resposta deve ser `200 OK` com o mesmo ID, título e disponibilidade registrados antes do reinício. Se precisar recuperar o ID, adicione temporariamente ao ambiente **Local** a variável `quartoPersistenciaId` com o valor anotado.
 
-O POST **08** cria outro quarto e salva seu ID em `quartoPersistenciaId`. Anote o ID e mantenha o Bruno aberto. Pare a API com `Ctrl+C` e suba de novo com `dotnet run --urls http://localhost:5050` na mesma pasta. Com o mesmo `apihotel.db`, o GET **09** deve devolver `200` e o mesmo quarto. Se a variável de execução tiver sido perdida, adicione temporariamente `quartoPersistenciaId` ao ambiente **Local** com o ID anotado.
+## Arquivos locais
 
-O passo a passo e o roteiro de gravação estão no [GUIA_ENTREGA_AS.md](GUIA_ENTREGA_AS.md).
-
-## Arquivos locais e segredos
-
-O `.gitignore` exclui `bin/`, `obj/`, arquivos SQLite locais (`*.db` e arquivos auxiliares) e arquivos de configuração local como `.env`, `.env.*` e `appsettings.Local.json`. Guarde senhas, tokens e outras credenciais em variáveis de ambiente ou em um gerenciador local de segredos. A conexão SQLite incluída usa apenas o caminho do arquivo.
+O `.gitignore` exclui `bin/`, `obj/`, bancos SQLite locais (`*.db` e arquivos auxiliares) e configurações locais como `.env` e `appsettings.Local.json`. Credenciais devem ser mantidas fora do Git.
 
 ## Vídeo de demonstração — AS
 
-[INSERIR LINK PÚBLICO DO NOVO VÍDEO]
+[Assistir à demonstração da AS no Google Drive](https://drive.google.com/drive/folders/1QPcN1FflsKKh7brbzUyr46yZOaJ-BQ5v?usp=sharing)
